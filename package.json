@@ -1,0 +1,36 @@
+{
+	"main": "main.js",
+	"name": "ksdhy",
+	"version": "1.0.0",
+	"scripts": {
+		"start": "electron .",
+		"build": "electron-builder"
+	},
+	"dependencies": {
+		"electron-json-storage": "^4.6.0",
+		"electron-screenshot-service": "^4.0.3",
+		"screenshot-desktop": "^1.15.0"
+	},
+	"devDependencies": {
+		"electron": "20.3.8",
+		"electron-builder": "^22.10.5"
+	},
+	"build": {
+		"appId": "com.ksdhy",
+		"productName": "待办",
+		"directories": {
+			"output": "build"
+		}
+	},
+	"nsis": {
+		"oneClick": false,
+		"allowToChangeInstallationDirectory": true,
+		"createDesktopShortcut": true
+	},
+	"win": {
+		"target": "nsis",
+		"arch": [
+			"x64"
+		]
+	}
+}
