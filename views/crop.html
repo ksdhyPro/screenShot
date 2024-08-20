@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./base.css" />
+    <script src="./paper-full.js"></script>
+    <script src="./utils.js"></script>
+    <style>
+      canvas {
+        -webkit-app-region: drag;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="paper"></canvas>
+  </body>
+  <script>
+    window.electronAPI.sendImage(
+      async (event, { imageData, width, height }) => {
+        paper.setup("paper");
+        let raster = new paper.Raster(bufferToBase64(imageData));
+        raster.onLoad = function () {
+          raster.fitBounds(paper.view.bounds);
+        };
+      }
+    );
+  </script>
+</html>

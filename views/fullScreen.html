@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="./base.css" />
+    <script src="./paper-full.js"></script>
+    <script src="./utils.js"></script>
+  </head>
+
+  <body>
+    <canvas id="paper"></canvas>
+  </body>
+  <script>
+    window.onload = () => {
+      paper.setup("paper");
+    };
+    window.electronAPI.sendImage(async (event, imageData) => {
+      paper.project.activeLayer.removeChildren();
+      let raster = new paper.Raster(bufferToBase64(imageData));
+      // 缩放到canvas的宽高
+      raster.onLoad = function () {
+        raster.fitBounds(paper.view.bounds);
+        //   鼠标矩形框选
+        let path;
+        let leftTop;
+        let tool = new paper.Tool();
+        tool.onMouseDown = function (event) {
+          leftTop = event.point;
+          path = new paper.Path.Rectangle({
+            from: event.point,
+            to: event.point,
+            strokeColor: "blue",
+          });
+        };
+        tool.onMouseDrag = function (event) {
+          path.remove();
+          path = new paper.Path.Rectangle({
+            from: leftTop,
+            to: event.point,
+            strokeColor: "blue",
+          });
+        };
+        tool.onMouseUp = function (event) {
+          window.electronAPI.crop({
+            imageBuffer: imageData,
+            x: leftTop.x * window.devicePixelRatio,
+            y: leftTop.y * window.devicePixelRatio,
+            width: (event.point.x - leftTop.x) * window.devicePixelRatio,
+            height: (event.point.y - leftTop.y) * window.devicePixelRatio,
+          });
+        };
+      };
+    });
+  </script>
+</html>

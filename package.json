@@ -9,7 +9,8 @@
 	"dependencies": {
 		"electron-json-storage": "^4.6.0",
 		"electron-screenshot-service": "^4.0.3",
-		"screenshot-desktop": "^1.15.0"
+		"screenshot-desktop": "^1.15.0",
+		"sharp": "^0.33.5"
 	},
 	"devDependencies": {
 		"electron": "20.3.8",
