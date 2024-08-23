@@ -18,7 +18,8 @@ async function createFullScreenWindow() {
       },
     });
     // win.webContents.openDevTools();
-    await win.loadFile(getProjectRoot() + "/views/fullScreen.html");
+    // await win.loadFile(getProjectRoot() + "/views/fullScreen.html");
+    await win.loadURL("http://localhost:8888");
     resolve(win);
   });
 }

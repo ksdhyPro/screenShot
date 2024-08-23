@@ -12,10 +12,10 @@ const path = require("path");
 async function createCropWindow(width, height, x, y) {
   return new Promise(async (resolve, reject) => {
     let win = new BrowserWindow({
-      width,
-      height,
-      x,
-      y,
+      width: Math.ceil(width),
+      height: Math.ceil(height),
+      x: Math.ceil(x),
+      y: Math.ceil(y),
       frame: false, // 无边框
       alwaysOnTop: true, // 置顶
       resizable: false, // 禁止调整大小
@@ -24,6 +24,7 @@ async function createCropWindow(width, height, x, y) {
       },
     });
     await win.loadFile(getProjectRoot() + "/views/crop.html");
+    win.webContents.openDevTools();
     resolve(win);
   });
 }
