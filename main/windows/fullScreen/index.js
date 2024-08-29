@@ -18,8 +18,12 @@ async function createFullScreenWindow() {
       },
     });
 
-    // await win.loadFile(getProjectRoot() + "/views/fullScreen.html");
-    await win.loadURL("http://localhost:8888");
+    // await win.loadFile(path.join(getProjectRoot() + "view/index.html"));
+    try {
+      await win.loadURL("http://localhost:8888");
+    } catch (e) {
+      console.log(e);
+    }
     win.webContents.openDevTools();
     resolve(win);
   });

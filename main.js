@@ -3,16 +3,24 @@ const { screenShot, crop } = require("./utils");
 const createFullScreenWindow = require("./main/windows/fullScreen");
 const createCropWindow = require("./main/windows/crop");
 const fs = require("fs");
+// const createTray = require("./main/tray");
 // const { getConfig, setConfig } = require("./main/store.js");
-
+// const createSettingWindow = require("./main/windows/setting");
 // require("./main/ipc");
 /**
  * 裁剪后的窗口
  * @type {BrowserWindow[]}
  */
 let cropWindows = [];
-
+let tray = null;
 app.whenReady().then(async () => {
+  // tray = createTray({
+  //   setting: async () => {
+  //     // 创建设置窗口
+  //     await createSettingWindow();
+  //   },
+  // });
+
   // 读取用户快捷键配置
 
   // const config = await getConfig("shortcut");
@@ -80,34 +88,6 @@ app.whenReady().then(async () => {
         data.y
       );
 
-      // cropWindow.on("ready-to-show", (event) => {
-      //   console.log("show");
-      //   // globalShortcut.register(exitCropWindowShortcut, () => {
-      //   //   event.sender.close();
-      //   // });
-      // });
-
-      // // 得到焦点时注册快捷键，避免全局注册导致其他应用不能用
-      // cropWindow.on("focus", (event) => {
-      //   console.log("focus");
-
-      //   globalShortcut.register(exitCropWindowShortcut, () => {
-      //     event.sender.close();
-      //     // let win = BrowserWindow.fromId(event.sender.id);
-      //     // if (win && !win.isDestroyed()) {
-      //     //   win.close();
-      //     //   cropWindows.splice(index, 1);
-      //     // }
-      //   });
-      // });
-
-      // // 失去焦点时注销快捷键
-      // cropWindow.on("blur", () => {
-      //   console.log("blur");
-
-      //   globalShortcut.unregister(exitCropWindowShortcut);
-      // });
-
       // 发送图像数据到裁剪窗口
       cropWindow.webContents.send("send-image", {
         imageData: buffer,
@@ -129,10 +109,7 @@ app.whenReady().then(async () => {
   console.log("application is ready");
 });
 
-// app.quit(() => {
-//   // 关闭所有窗口
-//   BrowserWindow.getAllWindows().forEach((win) => {
-//     win.close();
-//   });
-//   globalShortcut.unregisterAll();
-// });
+app.quit(() => {
+  tray.destroy();
+  globalShortcut.unregisterAll();
+});
