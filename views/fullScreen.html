@@ -19,7 +19,9 @@
       let raster = new paper.Raster(bufferToBase64(imageData));
       // 缩放到canvas的宽高
       raster.onLoad = function () {
-        raster.fitBounds(paper.view.bounds);
+        // raster.fitBounds(paper.view.bounds);
+        raster.width = paper.view.bounds.width;
+        raster.height = paper.view.bounds.height;
         //   鼠标矩形框选
         let path;
         let leftTop;

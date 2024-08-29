@@ -1,6 +1,19 @@
-const { BrowserWindow } = require("electron");
+const { BrowserWindow, ipcMain, screen, globalShortcut } = require("electron");
 const { getProjectRoot } = require("../../../utils");
 const path = require("path");
+
+const registerShortcut = () =>
+  globalShortcut.register("esc", () => {
+    let focusWin = BrowserWindow.getFocusedWindow();
+    if (focusWin && !focusWin.isDestroyed()) {
+      focusWin.close();
+    }
+  });
+
+const unregisterShortcut = () => {
+  globalShortcut.unregister("esc");
+};
+
 /**
  * 创建裁剪后的显示窗口
  * @param {*} width 宽
@@ -16,15 +29,22 @@ async function createCropWindow(width, height, x, y) {
       height: Math.ceil(height),
       x: Math.ceil(x),
       y: Math.ceil(y),
+      minHeight: 1,
       frame: false, // 无边框
       alwaysOnTop: true, // 置顶
       resizable: false, // 禁止调整大小
+      transparent: true, // 透明窗，加工具栏
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
     });
+    // 事件必须加到loadFile之前，不然可能会丢失！！！
+    win.on("focus", registerShortcut);
+    win.on("blur", unregisterShortcut);
+    win.on("close", () => {
+      unregisterShortcut();
+    });
     await win.loadFile(getProjectRoot() + "/views/crop.html");
-    win.webContents.openDevTools();
     resolve(win);
   });
 }

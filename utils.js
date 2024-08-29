@@ -24,10 +24,16 @@ function screenShot() {
  * @param {*} y number
  * @param {*} width number
  * @param {*} height number
+ * @param {*} devicePixelRatio number
  * @returns {Promise<Buffer>}
  */
-function crop(source, x, y, width, height) {
+function crop(source, x, y, width, height, devicePixelRatio = 1) {
   return new Promise((resolve, reject) => {
+    // 裁剪前先将坐标和尺寸乘以设备像素比，计算出实际图像的坐标和尺寸
+    x *= devicePixelRatio;
+    y *= devicePixelRatio;
+    width *= devicePixelRatio;
+    height *= devicePixelRatio;
     sharp(source)
       .extract({
         left: parseInt(x),

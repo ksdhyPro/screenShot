@@ -8,21 +8,55 @@
     <script src="./utils.js"></script>
     <style>
       canvas {
+        /* 弃用 */
         -webkit-app-region: drag;
+      }
+      body {
+        /* background-color: red; */
+      }
+      .tools {
+        height: 40px;
+        background-color: aqua;
+        width: 200px;
       }
     </style>
   </head>
   <body>
     <canvas id="paper"></canvas>
+    <!-- <div id="tools">我是工具栏</div> -->
   </body>
   <script>
     window.electronAPI.sendImage(
       async (event, { imageData, width, height }) => {
-        paper.setup("paper");
+        let el = document.getElementById("paper");
+        el.style.width = `${width}px`;
+        el.style.height = `${height}px`;
+        paper.setup(el);
         let raster = new paper.Raster(bufferToBase64(imageData));
         raster.onLoad = function () {
           raster.fitBounds(paper.view.bounds);
         };
+
+        // window.addEventListener("mousemove", (mouseEvent) => {
+        //   // 判断移动的对象是否为工具栏或者canvas画布
+        //   if (
+        //     // mouseEvent.target.id === "tools" ||
+        //     mouseEvent.target.id === "paper"
+        //   ) {
+        //     // 如果是这两个元素，则不转发鼠标事件
+        //     window.electronAPI.setIgnoreMouseEvents(false);
+        //   } else {
+        //     window.electronAPI.setIgnoreMouseEvents(true, {
+        //       forward: true,
+        //     });
+        //   }
+        // });
+        // el.addEventListener("mousedown", (mouseEvent) => {
+        //   window.electronAPI.windowMove(true);
+        // });
+        // el.addEventListener("mouseup", (mouseEvent) => {
+        //   window.electronAPI.windowMove(false);
+        // });
       }
     );
   </script>

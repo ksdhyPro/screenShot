@@ -7,12 +7,18 @@
 		"build": "electron-builder"
 	},
 	"dependencies": {
+		"conf": "^13.0.1",
 		"electron-json-storage": "^4.6.0",
 		"electron-screenshot-service": "^4.0.3",
+		"electron-store": "^10.0.0",
+		"esm": "^3.2.25",
 		"screenshot-desktop": "^1.15.0",
 		"sharp": "^0.33.5"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.25.2",
+		"@babel/plugin-transform-modules-commonjs": "^7.24.8",
+		"@babel/preset-env": "^7.25.4",
 		"electron": "20.3.8",
 		"electron-builder": "^22.10.5"
 	},
