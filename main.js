@@ -3,10 +3,18 @@ const { screenShot, crop } = require("./utils");
 const createFullScreenWindow = require("./main/windows/fullScreen");
 const createCropWindow = require("./main/windows/crop");
 const fs = require("fs");
-// const createTray = require("./main/tray");
-// const { getConfig, setConfig } = require("./main/store.js");
-// const createSettingWindow = require("./main/windows/setting");
-// require("./main/ipc");
+const createTray = require("./main/tray");
+const { getConfig, setConfig } = require("./main/store.js");
+const createSettingWindow = require("./main/windows/setting");
+const {
+  shortcutDict,
+  setShortcutHandler,
+  findShortcut,
+} = require("./main/shortcut.js");
+require("./main/ipc");
+
+app.setName("灵动截图");
+
 /**
  * 裁剪后的窗口
  * @type {BrowserWindow[]}
@@ -14,25 +22,12 @@ const fs = require("fs");
 let cropWindows = [];
 let tray = null;
 app.whenReady().then(async () => {
-  // tray = createTray({
-  //   setting: async () => {
-  //     // 创建设置窗口
-  //     await createSettingWindow();
-  //   },
-  // });
-
-  // 读取用户快捷键配置
-
-  // const config = await getConfig("shortcut");
-  // 获取crop快捷键
-  const cropShortcut = "ctrl+t";
-  // config.find((item) => item.value === "crop").key;
-
-  // 获取exitCropWindow快捷键
-  const exitCropWindowShortcut = "esc";
-  // config.find(
-  //   (item) => item.value === "exitCropWindow"
-  // ).key;
+  tray = createTray({
+    setting: async () => {
+      // 创建设置窗口
+      await createSettingWindow();
+    },
+  });
 
   // 初始化创建隐藏的全屏窗口，避免截屏时用户等待
   let fullScreenWindow = await createFullScreenWindow();
@@ -101,15 +96,17 @@ app.whenReady().then(async () => {
     }
   });
 
-  // 全局注册快捷键
-  globalShortcut.register(cropShortcut, async () => {
-    fullScreenWindow.webContents.send("send-image", await screenShot());
-    fullScreenWindow.show();
+  // 全局注册截图快捷键
+  findShortcut(shortcutDict.crop).then(async (cropKey) => {
+    setShortcutHandler(shortcutDict.crop, cropKey, async () => {
+      fullScreenWindow.webContents.send("send-image", await screenShot());
+      fullScreenWindow.show();
+    });
   });
+
   console.log("application is ready");
 });
-
-app.quit(() => {
+app.on("quit", () => {
   tray.destroy();
   globalShortcut.unregisterAll();
 });

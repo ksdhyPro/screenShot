@@ -20,7 +20,9 @@
 		"@babel/plugin-transform-modules-commonjs": "^7.24.8",
 		"@babel/preset-env": "^7.25.4",
 		"electron": "20.3.8",
-		"electron-builder": "^22.10.5"
+		"electron-builder": "^22.10.5",
+		"tsc": "^2.0.4",
+		"typescript": "^5.5.4"
 	},
 	"build": {
 		"appId": "com.ksdhy",

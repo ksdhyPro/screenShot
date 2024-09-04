@@ -10,15 +10,15 @@ async function createSettingWindow() {
     let win = new BrowserWindow({
       width: 800,
       height: 600,
-      title: "灵动截图",
+      title: "设置",
+      icon: path.join(getProjectRoot() + "/assets/favicon.ico"),
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
     });
-
-    await win.loadFile(getProjectRoot() + "/views/setting.html");
-    // await win.loadURL("http://localhost:8888");
+    win.setMenu(null);
     // win.webContents.openDevTools();
+    await win.loadFile(getProjectRoot() + "/views/setting.html");
     resolve(win);
   });
 }

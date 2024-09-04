@@ -1,11 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>灵动截图-设置</title>
+    <title>快捷键设置</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f7f7f7;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      label {
+        font-size: 18px;
+        margin-top: 20px;
+        display: block;
+      }
+      input {
+        width: 300px;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin-top: 20px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
   </head>
   <body>
-    设置
+    <h1>快捷键设置</h1>
+
+    <label for="screenshot-shortcut">截屏快捷键:</label>
+    <input
+      type="text"
+      id="screenshot-shortcut"
+      placeholder="按下快捷键组合..."
+      readonly
+    />
+
+    <label for="close-window-shortcut">关闭当前置顶窗口快捷键:</label>
+    <input
+      type="text"
+      id="close-window-shortcut"
+      placeholder="按下快捷键组合..."
+      readonly
+    />
+    <br />
+    <button id="save-button">保存</button>
+
+    <script>
+      window.electronAPI.getShortcuts().then((shortcuts) => {
+        console.log("获取到的快捷键信息: ", shortcuts);
+
+        const screenshotInput = document.getElementById("screenshot-shortcut");
+        const closeWindowInput = document.getElementById(
+          "close-window-shortcut"
+        );
+        const saveButton = document.getElementById("save-button");
+        let screenshotShortcut = shortcuts.find(
+          (shortcut) => shortcut.value === "crop"
+        )?.key;
+        let closeWindowShortcut = shortcuts.find(
+          (shortcut) => shortcut.value === "exitCropWindow"
+        )?.key;
+
+        screenshotInput.value = screenshotShortcut || "";
+        closeWindowInput.value = closeWindowShortcut || "";
+
+        // 处理截屏快捷键输入
+        screenshotInput.addEventListener("keydown", (event) => {
+          event.preventDefault();
+          screenshotShortcut = getShortcutCombination(event);
+          screenshotInput.value = screenshotShortcut;
+        });
+
+        // 处理关闭窗口快捷键输入
+        closeWindowInput.addEventListener("keydown", (event) => {
+          event.preventDefault();
+          closeWindowShortcut = getShortcutCombination(event);
+          closeWindowInput.value = closeWindowShortcut;
+        });
+
+        saveButton.addEventListener("click", () => {
+          if (
+            isValidShortcut(screenshotShortcut) &&
+            isValidShortcut(closeWindowShortcut)
+          ) {
+            console.log(`截屏快捷键: "${screenshotShortcut}" 已保存!`);
+            console.log(
+              `关闭当前置顶窗口快捷键: "${closeWindowShortcut}" 已保存!`
+            );
+            alert("快捷键已保存成功!");
+            // 在这里通过 IPC 发送快捷键信息到主进程
+            window.electronAPI.saveShortcuts([
+              {
+                key: screenshotShortcut,
+                value: "crop",
+              },
+              {
+                key: closeWindowShortcut,
+                value: "exitCropWindow",
+              },
+            ]);
+          } else {
+            alert("请为每个功能选择有效的快捷键（非空且不只是修饰键）");
+            if (!isValidShortcut(screenshotShortcut)) {
+              screenshotInput.value = "";
+              screenshotShortcut = "";
+            }
+            if (!isValidShortcut(closeWindowShortcut)) {
+              closeWindowInput.value = "";
+              closeWindowShortcut = "";
+            }
+          }
+        });
+
+        function getShortcutCombination(event) {
+          const keys = new Set();
+
+          if (event.ctrlKey) keys.add("Ctrl");
+          if (event.shiftKey) keys.add("Shift");
+          if (event.altKey) keys.add("Alt");
+          if (event.metaKey) keys.add("Meta");
+          if (!["Control", "Shift", "Alt", "Meta"].includes(event.key)) {
+            keys.add(event.key);
+          }
+          return Array.from(keys)
+            .map((k) => k.toLowerCase())
+            .join("+");
+        }
+
+        function isValidShortcut(shortcut) {
+          const modifierKeys = ["Ctrl", "Shift", "Alt", "Meta"];
+          const keys = shortcut.split("+");
+          const hasNonModifierKey = keys.some(
+            (key) => !modifierKeys.includes(key)
+          );
+
+          return hasNonModifierKey && keys.length > 0;
+        }
+      });
+      window.onload = () => {};
+    </script>
   </body>
 </html>

@@ -1,17 +1,24 @@
 const { BrowserWindow, ipcMain, screen, globalShortcut } = require("electron");
 const { getProjectRoot } = require("../../../utils");
 const path = require("path");
-
-const registerShortcut = () =>
-  globalShortcut.register("esc", () => {
+const {
+  shortcutDict,
+  setShortcutHandler,
+  findShortcut,
+} = require("../../shortcut.js");
+const registerShortcut = async () => {
+  let shortcut = await findShortcut(shortcutDict.exitCropWindow);
+  setShortcutHandler(shortcutDict.exitCropWindow, shortcut, () => {
     let focusWin = BrowserWindow.getFocusedWindow();
     if (focusWin && !focusWin.isDestroyed()) {
       focusWin.close();
     }
   });
+};
 
-const unregisterShortcut = () => {
-  globalShortcut.unregister("esc");
+const unregisterShortcut = async () => {
+  let shortcut = await findShortcut(shortcutDict.exitCropWindow);
+  globalShortcut.unregister(shortcut);
 };
 
 /**

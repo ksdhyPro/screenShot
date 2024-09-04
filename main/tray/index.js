@@ -1,4 +1,4 @@
-const { Tray, Menu } = require("electron");
+const { Tray, Menu, app } = require("electron");
 const { getProjectRoot } = require("../../utils");
 const path = require("path");
 /**

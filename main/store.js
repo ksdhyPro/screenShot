@@ -1,10 +1,11 @@
 const loadConf = async () => {
   const Conf = (await import("conf")).default;
   return new Conf({
+    projectName: "screenshot",
     defaults: {
       shortcut: [
         { key: "ctrl+t", value: "crop" },
-        { key: "esc", value: "exitCropWindow" },
+        { key: "escape", value: "exitCropWindow" },
       ],
     },
   });
