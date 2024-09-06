@@ -17,7 +17,8 @@ async function createFullScreenWindow() {
         preload: path.join(__dirname, "preload.js"),
       },
     });
-    await win.loadURL("http://localhost:8888");
+    // await win.loadURL("http://localhost:8888");
+    await win.loadFile(getProjectRoot() + "/view/index.html");
     // win.webContents.openDevTools();
     resolve(win);
   });

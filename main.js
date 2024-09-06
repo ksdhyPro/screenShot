@@ -1,10 +1,16 @@
-const { app, BrowserWindow, globalShortcut, ipcMain } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  clipboard,
+  nativeImage,
+} = require("electron");
 const { screenShot, crop } = require("./utils");
 const createFullScreenWindow = require("./main/windows/fullScreen");
 const createCropWindow = require("./main/windows/crop");
 const fs = require("fs");
 const createTray = require("./main/tray");
-const { getConfig, setConfig } = require("./main/store.js");
 const createSettingWindow = require("./main/windows/setting");
 const {
   shortcutDict,
@@ -92,7 +98,9 @@ app.whenReady().then(async () => {
       cropWindows.push(cropWindow.id);
       cropWindow.focus();
     } else {
-      fs.writeFileSync("test.png", buffer);
+      // fs.writeFileSync("test.png", buffer);
+      // 复制到剪贴板
+      clipboard.writeImage(nativeImage.createFromBuffer(buffer));
     }
   });
 
