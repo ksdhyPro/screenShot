@@ -5,7 +5,10 @@ const {
   ipcMain,
   clipboard,
   nativeImage,
+  autoUpdater,
+  dialog,
 } = require("electron");
+const log = require("electron-log");
 const { screenShot, crop } = require("./utils");
 const createFullScreenWindow = require("./main/windows/fullScreen");
 const createCropWindow = require("./main/windows/crop");
@@ -20,6 +23,22 @@ const {
 require("./main/ipc");
 
 app.setName("灵动截图");
+log.transports.file.level = "info";
+// 设置日志输出
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
+
+// 设置 autoUpdater 的更新 URL
+autoUpdater.setFeedURL({
+  provider: "generic",
+  url: "http://1ms.ink:8001/update/",
+});
+log.info("App starting...");
+
+// 检测更新函数
+function checkForUpdates() {
+  autoUpdater.checkForUpdates();
+}
 
 /**
  * 裁剪后的窗口
@@ -28,6 +47,11 @@ app.setName("灵动截图");
 let cropWindows = [];
 let tray = null;
 app.whenReady().then(async () => {
+  try {
+    checkForUpdates();
+  } catch (error) {
+    console.log("development mode");
+  }
   tray = createTray({
     setting: async () => {
       // 创建设置窗口
@@ -114,6 +138,34 @@ app.whenReady().then(async () => {
 
   console.log("application is ready");
 });
+
+// 监听更新事件
+autoUpdater.on("update-available", () => {
+  log.info("Update available.");
+  dialog.showMessageBox({
+    type: "提示",
+    title: "检测到新版本",
+    message: "检测到新版本，更新中",
+  });
+});
+
+autoUpdater.on("update-downloaded", (info) => {
+  log.info("Update downloaded");
+  dialog
+    .showMessageBox({
+      type: "提示",
+      title: "更新完成",
+      message: "新版本已经下载完成，是否重启应用？",
+      buttons: ["Restart", "Later"],
+    })
+    .then((result) => {
+      if (result.response === 0) {
+        // 选择了 'Restart'
+        autoUpdater.quitAndInstall();
+      }
+    });
+});
+
 app.on("quit", () => {
   tray.destroy();
   globalShortcut.unregisterAll();

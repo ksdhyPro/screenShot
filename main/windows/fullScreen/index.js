@@ -11,7 +11,7 @@ async function createFullScreenWindow() {
       fullscreen: true, // 全屏显示
       frame: false, // 无边框
       show: false, // 打开隐藏
-      // alwaysOnTop: true, // 置顶
+      alwaysOnTop: true, // 置顶
       resizable: false, // 禁止调整大小
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),

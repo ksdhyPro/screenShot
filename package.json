@@ -9,6 +9,7 @@
   "dependencies": {
     "conf": "^13.0.1",
     "electron-json-storage": "^4.6.0",
+    "electron-log": "^5.2.0",
     "electron-screenshot-service": "^4.0.3",
     "electron-store": "^10.0.0",
     "electron-updater": "^6.3.4",
@@ -29,6 +30,7 @@
     "appId": "com.ksdhy",
     "icon": "assets/desktop.ico",
     "productName": "灵动截图",
+    "asar": false,
     "directories": {
       "output": "build"
     },
@@ -40,11 +42,13 @@
     "win": {
       "target": "nsis"
     },
+    "mac": {
+      "target": "dmg"
+    },
     "publish": [
       {
-        "provider": "github",
-        "owner": "your-github-username",
-        "repo": "your-repo-name"
+        "provider": "generic",
+        "url": "http://1ms.ink:8001/update/"
       }
     ]
   }
