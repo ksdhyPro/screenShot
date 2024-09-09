@@ -11,6 +11,7 @@
     "electron-json-storage": "^4.6.0",
     "electron-screenshot-service": "^4.0.3",
     "electron-store": "^10.0.0",
+    "electron-updater": "^6.3.4",
     "esm": "^3.2.25",
     "screenshot-desktop": "^1.15.0",
     "sharp": "^0.33.5"
@@ -38,24 +39,6 @@
     },
     "win": {
       "target": "nsis"
-    },
-    "files": [
-      "dist/**/*",
-      "assets/**/*",
-      "main.js",
-      "utils.js",
-      "main/**/*",
-      "views/**/*",
-      "view/**/*"
-    ],
-    "extraResources": [
-      {
-        "from": "assets/",
-        "to": "assets/",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ]
+    }
   }
 }

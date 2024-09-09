@@ -56,7 +56,7 @@ function crop(source, x, y, width, height, devicePixelRatio = 1) {
  * @returns {string}
  */
 function getProjectRoot() {
-  return process.cwd();
+  return __dirname;
 }
 
 module.exports = {
