@@ -145,21 +145,29 @@ app.whenReady().then(async () => {
 // 监听更新事件
 autoUpdater.on("update-available", () => {
   log.info("Update available.");
-  dialog.showMessageBox({
-    type: "提示",
-    title: "检测到新版本",
-    message: "检测到新版本，更新中",
-  });
+  dialog
+    .showMessageBox({
+      type: "info",
+      title: "检测到新版本",
+      message: "检测到新版本，是否下载?",
+      buttons: ["下载", "取消"],
+    })
+    .then((result) => {
+      if (result.response === 0) {
+        // 选择了 'Download'
+        autoUpdater.downloadUpdate();
+      }
+    });
 });
 
 autoUpdater.on("update-downloaded", (info) => {
   log.info("Update downloaded");
   dialog
     .showMessageBox({
-      type: "提示",
+      type: "info",
       title: "更新完成",
       message: "新版本已经下载完成，是否重启应用？",
-      buttons: ["Restart", "Later"],
+      buttons: ["立即重启", "稍后重启"],
     })
     .then((result) => {
       if (result.response === 0) {
