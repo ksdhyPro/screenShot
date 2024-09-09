@@ -20,10 +20,13 @@ const {
   setShortcutHandler,
   findShortcut,
 } = require("./main/shortcut.js");
+const path = require("path");
 require("./main/ipc");
 
 app.setName("灵动截图");
 log.transports.file.level = "info";
+log.transports.file.resolvePathFn = () =>
+  __dirname + "/logs/" + app.getName() + ".log";
 // 设置日志输出
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = "info";
