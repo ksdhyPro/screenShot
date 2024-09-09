@@ -31,18 +31,17 @@
     "icon": "assets/desktop.ico",
     "productName": "灵动截图",
     "asar": false,
-    "perMachine": true,
-    "allowElevation": true,
     "directories": {
       "output": "build"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
+      "createDesktopShortcut": true,
+      "perMachine": true
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "mac": {
       "target": "dmg"

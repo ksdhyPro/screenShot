@@ -5,9 +5,9 @@ const {
   ipcMain,
   clipboard,
   nativeImage,
-  autoUpdater,
   dialog,
 } = require("electron");
+const { autoUpdater } = require("electron-updater");
 const log = require("electron-log");
 const { screenShot, crop } = require("./utils");
 const createFullScreenWindow = require("./main/windows/fullScreen");
