@@ -40,8 +40,7 @@
       "perMachine": true
     },
     "win": {
-      "target": "nsis",
-      "requestedExecutionLevel": "requireAdministrator"
+      "target": "nsis"
     },
     "mac": {
       "target": "dmg"
