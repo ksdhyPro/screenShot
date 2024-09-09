@@ -31,6 +31,8 @@
     "icon": "assets/desktop.ico",
     "productName": "灵动截图",
     "asar": false,
+    "perMachine": true,
+    "allowElevation": true,
     "directories": {
       "output": "build"
     },
