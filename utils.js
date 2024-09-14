@@ -7,8 +7,10 @@ const screenshot = require("screenshot-desktop");
  */
 function screenShot() {
   return new Promise((resolve, reject) => {
+    let t = Date.now();
     screenshot({ format: "png" })
       .then((img) => {
+        console.log("screenshot time:", Date.now() - t);
         resolve(img);
       })
       .catch((err) => {

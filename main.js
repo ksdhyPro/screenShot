@@ -22,7 +22,7 @@ const {
 } = require("./main/shortcut.js");
 const path = require("path");
 require("./main/ipc");
-
+app.disableHardwareAcceleration();
 app.setName("灵动截图");
 log.transports.file.level = "info";
 log.transports.file.resolvePathFn = () =>
@@ -133,9 +133,13 @@ app.whenReady().then(async () => {
 
   // 全局注册截图快捷键
   findShortcut(shortcutDict.crop).then(async (cropKey) => {
+    let png = await screenShot();
     setShortcutHandler(shortcutDict.crop, cropKey, async () => {
-      fullScreenWindow.webContents.send("send-image", await screenShot());
-      fullScreenWindow.show();
+      fullScreenWindow.webContents.send("send-image", png);
+      // 留给渲染进城处理画布的时间
+      setTimeout(() => {
+        fullScreenWindow.show();
+      }, 1000);
     });
   });
 

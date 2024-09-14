@@ -42,10 +42,10 @@ const setShortcutHandler = async (shortcutKey, shortcut, handler) => {
       // 注册新的快捷键
       globalShortcut.register(shortcut, handler);
       // 存储快捷键
-      let shortcutList = await store.getConfig("shortcut");
-      let index = shortcutList.findIndex((item) => item.value === shortcutKey);
-      shortcutList[index].key = shortcut;
-      store.setConfig("shortcut", shortcutList);
+      // let shortcutList = await store.getConfig("shortcut");
+      // let index = shortcutList.findIndex((item) => item.value === shortcutKey);
+      // shortcutList[index].key = shortcut;
+      // store.setConfig("shortcut", shortcutList);
     } else {
       console.log(`${shortcutKey} handler not found!`);
     }

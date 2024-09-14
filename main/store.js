@@ -1,7 +1,10 @@
 const log = require("electron-log");
+let userConfig;
+let conf;
 const loadConf = async () => {
   const Conf = (await import("conf")).default;
-  return new Conf({
+  if (conf) return conf;
+  conf = new Conf({
     projectName: "screenshot",
     defaults: {
       shortcut: [
@@ -10,15 +13,20 @@ const loadConf = async () => {
       ],
     },
   });
+  return conf;
 };
 
 // 同时使用 module.exports 导出功能
 module.exports = {
   getConfig: async (key) => {
+    if (userConfig) {
+      return userConfig;
+    }
     try {
       const config = await loadConf();
-      log.info(`读取用户配置：${config.get(key)}`);
-      return config.get(key);
+      log.info(`reading user setting:${JSON.stringify(config.get(key))}`);
+      userConfig = config.get(key);
+      return userConfig;
     } catch (error) {
       log.error(error);
     }
@@ -26,6 +34,7 @@ module.exports = {
 
   setConfig: async (key, value) => {
     const config = await loadConf();
+    userConfig = value;
     config.set(key, value);
   },
 };
