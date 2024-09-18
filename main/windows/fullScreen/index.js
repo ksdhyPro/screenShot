@@ -15,11 +15,13 @@ async function createFullScreenWindow() {
       resizable: false, // 禁止调整大小
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
+        backgroundThrottling: false,
       },
     });
+    // win.webContents.setFrameRate(60);
     await win.loadURL("http://localhost:8888");
     // await win.loadFile(getProjectRoot() + "/view/index.html");
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     resolve(win);
   });
 }

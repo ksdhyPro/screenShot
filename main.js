@@ -139,7 +139,7 @@ app.whenReady().then(async () => {
       // 留给渲染进城处理画布的时间
       setTimeout(() => {
         fullScreenWindow.show();
-      }, 1000);
+      }, 60);
     });
   });
 
