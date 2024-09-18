@@ -133,13 +133,13 @@ app.whenReady().then(async () => {
 
   // 全局注册截图快捷键
   findShortcut(shortcutDict.crop).then(async (cropKey) => {
-    let png = await screenShot();
     setShortcutHandler(shortcutDict.crop, cropKey, async () => {
+      let png = await screenShot();
       fullScreenWindow.webContents.send("send-image", png);
       // 留给渲染进城处理画布的时间
       setTimeout(() => {
         fullScreenWindow.show();
-      }, 60);
+      }, 100);
     });
   });
 

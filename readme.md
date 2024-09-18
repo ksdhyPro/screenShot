@@ -14,12 +14,17 @@
 - 问题原因：
   > 每次动态注册快捷键时都读取了本地存储，由于是同步读取，会阻塞主进程
 - 优化方案：
+
   > 变更为添加一层内存缓存，应用初始化读取一次，以后每次在内存中找，再通过设置页面设置时，同步更新缓存和本地存储
 
-配置
-
-```js
- webPreferences: {
-  backgroundThrottling: false, // 浏览器不可见时，仍然执行定时任务等
-}
-```
+- 问题复现：
+  > 截屏后画布清空延迟
+- 问题原因：
+  > 浏览器存在节能优化，在页面不可见时，requestAnimationFrame 会停止运行，canvas 也会停止绘制
+- 优化方案：
+  窗口添加以下配置
+  ```js
+  webPreferences: {
+    backgroundThrottling: false,
+  }
+  ```
