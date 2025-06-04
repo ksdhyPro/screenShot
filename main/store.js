@@ -1,5 +1,4 @@
 const log = require("electron-log");
-let userConfig;
 let conf;
 const loadConf = async () => {
   const Conf = (await import("conf")).default;
@@ -19,14 +18,11 @@ const loadConf = async () => {
 // 同时使用 module.exports 导出功能
 module.exports = {
   getConfig: async (key) => {
-    if (userConfig) {
-      return userConfig;
-    }
     try {
       const config = await loadConf();
-      log.info(`reading user setting:${JSON.stringify(config.get(key))}`);
-      userConfig = config.get(key);
-      return userConfig;
+      const value = config.get(key);
+      log.info(`reading user setting:${JSON.stringify(value)}`);
+      return value;
     } catch (error) {
       log.error(error);
     }
@@ -34,7 +30,6 @@ module.exports = {
 
   setConfig: async (key, value) => {
     const config = await loadConf();
-    userConfig = value;
     config.set(key, value);
   },
 };
